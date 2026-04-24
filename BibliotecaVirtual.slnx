@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/Core/">
+    <Project Path="src/Core/Web.API/Web.API.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/" />
+  <Folder Name="/src/Modules/Workspace/">
+    <Project Path="src/Modules/Workspace/Workspace.Application/Workspace.Application.csproj" />
+    <Project Path="src/Modules/Workspace/Workspace.Domain/Workspace.Domain.csproj" />
+    <Project Path="src/Modules/Workspace/Workspace.Infrastructure/Workspace.Infrastructure.csproj" />
+    <Project Path="src/Modules/Workspace/Workspace.Presentation/Workspace.Presentation.csproj" />
+  </Folder>
+</Solution>

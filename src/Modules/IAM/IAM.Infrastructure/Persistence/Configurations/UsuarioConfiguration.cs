@@ -14,5 +14,4 @@ public class UsuarioConfiguration : IEntityTypeConfiguration<Usuario>
         builder.HasIndex(u => u.Email).IsUnique();
         builder.Property(u => u.NombreCompleto).IsRequired().HasMaxLength(200);
     }
-    
 }

@@ -1,12 +1,10 @@
-using IAM.Infrastructure.Persistence.Configurations;
-using Microsoft.EntityFrameworkCore;
+using IAM.Infrastructure;
+using Workspace.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<IamDbContext>(options =>
-{
-    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection"));
-});
+builder.Services.AddIamInfrastructure(builder.Configuration);
+builder.Services.AddWorkspaceInfrastructure(builder.Configuration);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

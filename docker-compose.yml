@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   db_biblioteca:
     image: postgres:15-alpine # Versión ligera y estable

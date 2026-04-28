@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Workspace.Application\Workspace.Application.csproj" />
+    <ProjectReference Include="..\Workspace.Infrastructure\Workspace.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  db_biblioteca:
+    image: postgres:15-alpine # Versión ligera y estable
+    container_name: ucb_postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: rootpassword123 # Contraseña local de desarrollo
+      POSTGRES_DB: biblioteca_db
+    ports:
+      - "5432:5432" # Mapea el puerto del contenedor a la computadora
+    volumes:
+      - pgdata:/var/lib/postgresql/data # Hace que los datos no se borren si se apaga el contenedor
+
+volumes:
+  pgdata:

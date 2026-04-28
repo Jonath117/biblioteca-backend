@@ -6,11 +6,11 @@ services:
     container_name: ucb_postgres_db
     restart: always
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: rootpassword123 # Contraseña local de desarrollo
-      POSTGRES_DB: biblioteca_db
+      POSTGRES_USER: ${DB_USER} # Usuario local de desarrollo
+      POSTGRES_PASSWORD: ${DB_PASSWORD} # Contraseña local de desarrollo
+      POSTGRES_DB: ${DB_NAME}
     ports:
-      - "5432:5432" # Mapea el puerto del contenedor a la computadora
+      - "${DB_PORT}:5432" # Mapea el puerto del contenedor a la computadora
     volumes:
       - pgdata:/var/lib/postgresql/data # Hace que los datos no se borren si se apaga el contenedor
 

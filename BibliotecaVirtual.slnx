@@ -4,6 +4,24 @@
     <Project Path="src/Core/Web.API/Web.API.csproj" />
   </Folder>
   <Folder Name="/src/Modules/" />
+  <Folder Name="/src/Modules/Catalog/">
+    <Project Path="src/Modules/Catalog.Application/Catalog.Application.csproj" />
+    <Project Path="src/Modules/Catalog.Domain/Catalog.Domain.csproj" />
+    <Project Path="src/Modules/Catalog.Infrastructure/Catalog.Infrastructure.csproj" />
+    <Project Path="src/Modules/Catalog.Presentation/Catalog.Presentation.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/IAM/">
+    <Project Path="src/Modules/IAM.Application/IAM.Application.csproj" />
+    <Project Path="src/Modules/IAM.Domain/IAM.Domain.csproj" />
+    <Project Path="src/Modules/IAM.Infrastructure/IAM.Infrastructure.csproj" />
+    <Project Path="src/Modules/IAM.Presentation/IAM.Presentation.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Workflow/">
+    <Project Path="src/Modules/Workflow.Application/Workflow.Application.csproj" />
+    <Project Path="src/Modules/Workflow.Domain/Workflow.Domain.csproj" />
+    <Project Path="src/Modules/Workflow.Infrastructure/Workflow.Infrastructure.csproj" />
+    <Project Path="src/Modules/Workflow.Presentation/Workflow.Presentation.csproj" />
+  </Folder>
   <Folder Name="/src/Modules/Workspace/">
     <Project Path="src/Modules/Workspace/Workspace.Application/Workspace.Application.csproj" />
     <Project Path="src/Modules/Workspace/Workspace.Domain/Workspace.Domain.csproj" />

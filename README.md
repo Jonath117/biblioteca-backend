@@ -41,10 +41,43 @@ Para que tu base de datos local tenga exactamente las mismas tablas y esquemas (
 Abre la terminal en la raíz de la solución y ejecuta:
 
 ```Bash
-dotnet ef database update --project src/Modules/IAM.Infrastructure --startup-project src/Core/Web.API
+dotnet ef database update --project src/Modules/IAM/IAM.Infrastructure --startup-project src/Core/Web.API --context IamDbContext
 ```
+
+```bash
+dotnet ef database update --project src/Modules/Workspace/Workspace.Infrastructure --startup-project src/Core/Web.API --context WorkspaceDbContext
+```
+
+```bash
+dotnet ef database update --project src/Modules/Workflow/Workflow.Infrastructure --startup-project src/Core/Web.API --context WorkflowDbContext
+```
+
+```bash
+dotnet ef database update --project src/Modules/Catalog/Catalog.Infrastructure --startup-project src/Core/Web.API --context CatalogDbContext
+```
+
+
 Verificación: Abre DBeaver, conéctate a localhost:5432 y verifica que dentro de la base de datos biblioteca_db existan los esquemas correspondientes.
 
+### Si falla
+Entrar a cada Modulo y colocarse en la capa de Infrastructure:  
+Ejecutar en cada uno:
+
+```bash
+dotnet add package Microsoft.EntityFrameworkCore
+```
+
+```bash
+dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL
+```
+
+```bash
+dotnet add package Microsoft.EntityFrameworkCore.Design
+```
+
+```bash
+dotnet add package Microsoft.EntityFrameworkCore.Relational
+```
 
 ## Estructura del Proyecto
 El código está organizado estrictamente en módulos para garantizar un bajo acoplamiento:

@@ -12,4 +12,8 @@
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Workflow.Application\Workflow.Application.csproj" />
+    </ItemGroup>
+
 </Project>

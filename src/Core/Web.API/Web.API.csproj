@@ -15,8 +15,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Modules\IAM.Infrastructure\IAM.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\Workspace\Workspace.Infrastructure\Workspace.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\IAM\IAM.Infrastructure\IAM.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\Workflow\Workflow.Infrastructure\Workflow.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\Catalog\Catalog.Infrastructure\Catalog.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

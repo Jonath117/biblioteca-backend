@@ -1,3 +1,5 @@
+using IAM.Domain.Exceptions;
+
 namespace IAM.Domain.Entities;
 
 public class Usuario
@@ -29,17 +31,20 @@ public class Usuario
 
     public static Usuario Create(string email, string nombre, string apellido, string passwordHash, int rolId)
     {
-        if (string.IsNullOrWhiteSpace(email) || !email.Trim().EndsWith("@ucb.edu.bo"))
-            throw new ArgumentException("El email debe pertenecer al dominio institucional @ucb.edu.bo");
+        if (string.IsNullOrWhiteSpace(email))
+            throw new DomainException("El email es requerido");
         
         if (string.IsNullOrWhiteSpace(nombre))
-            throw new ArgumentException("El nombre es obligatorio", nameof(nombre));
+            throw new DomainException("El nombre es requerido");
         
         if (string.IsNullOrWhiteSpace(apellido))
-            throw new ArgumentException("El apellido es obligatorio", nameof(apellido));
+            throw new DomainException("El apellido es obligatorio");
         
         if (string.IsNullOrWhiteSpace(passwordHash))
             throw new ArgumentException("La contrasena no puede estar vacio.");
+        
+        if (rolId <= 0)
+            throw new DomainException("El rol es requerido");
 
         return new Usuario(email.Trim().ToLowerInvariant(), nombre.Trim(), apellido.Trim(), passwordHash, rolId);
     }
@@ -47,10 +52,10 @@ public class Usuario
     public void ActulizarNombre(string nuevoNombre)
     {
         if(string.IsNullOrWhiteSpace(nuevoNombre))
-            throw new ArgumentException("El nombre es obligatorio", nameof(nuevoNombre));
+            throw new DomainException("El nuevo nombre es requerido");
 
         if (nuevoNombre == Nombre)
-            throw new ArgumentException("El nuevo nombre es igual al actual");
+            throw new DomainException("El nuevo nombre es igual al actual");
         
         Nombre = nuevoNombre;
     }
@@ -58,18 +63,21 @@ public class Usuario
     public void ActulizarApellido(string nuevoApellido)
     {
         if (string.IsNullOrWhiteSpace(nuevoApellido))
-            throw new ArgumentException("El apellido es  obligatorio", nameof(nuevoApellido));
+            throw new DomainException("El apellido es  obligatorio");
         
         if (nuevoApellido == Apellido)
-            throw new ArgumentException("El nuevo apellido es igual al actual");
+            throw new DomainException("El nuevo apellido es igual al actual");
         
         Apellido = nuevoApellido;
     }
 
-    public void AsignarRol(int nuevoRolId)
+    public void CambiarRol(int nuevoRolId)
     {
         if(nuevoRolId <= 0)
-            throw new ArgumentOutOfRangeException("Rol inavlido");
+            throw new DomainException("Rol inavlido");
+        
+        if(nuevoRolId == RolId)
+            throw new DomainException("El usuario ya tiene asignado este rol");
         
         RolId = nuevoRolId;
     }
@@ -77,7 +85,7 @@ public class Usuario
     public void ActivarCuenta()
     {
         if(Activo)
-            throw new ArgumentException("La cuenta ya esta activa");
+            throw new DomainException("La cuenta ya esta activa");
 
         Activo = true;
     }
@@ -85,9 +93,11 @@ public class Usuario
     public void DesactivarCuenta()
     {
         if(!Activo)
-            throw new ArgumentException("La cuenta ya esta desactiva");
+            throw new DomainException("La cuenta ya esta desactiva");
         
         Activo = false;
     }
-    
+
+    public string NombreCompleto() => $"{Nombre} {Apellido}".Trim();
+
 }

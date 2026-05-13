@@ -1,5 +1,6 @@
 using IAM.Infrastructure.Authentication;
 using IAM.Infrastructure.Persistence.Configurations;
+using IAM.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +20,7 @@ public static class DependencyInjection
         // Ejemplo: services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 
         services.AddScoped<JwtTokenGenerator>();
+        services.AddScoped<UsuarioRepository>();
 
         return services;
     }

@@ -17,13 +17,12 @@ public class Usuario
 
     private Usuario(){ }
 
-    private Usuario(string email, string nombre, string apellido, string passwordHash, int rolId)
+    private Usuario(string email, string nombre, string apellido, int rolId)
     {
         Id = Guid.NewGuid();
         Email = email;
         Nombre = nombre;
         Apellido = apellido;
-        PasswordHash = passwordHash;
         RolId = rolId;
         Activo = true;
         FechaRegistro = DateTime.UtcNow;
@@ -46,7 +45,7 @@ public class Usuario
         if (rolId <= 0)
             throw new DomainException("El rol es requerido");
 
-        return new Usuario(email.Trim().ToLowerInvariant(), nombre.Trim(), apellido.Trim(), passwordHash, rolId);
+        return new Usuario(email.Trim().ToLowerInvariant(), nombre.Trim(), apellido.Trim(), rolId);
     }
 
     public void ActulizarNombre(string nuevoNombre)

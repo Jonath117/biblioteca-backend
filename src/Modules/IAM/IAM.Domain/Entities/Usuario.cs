@@ -28,7 +28,7 @@ public class Usuario
         FechaRegistro = DateTime.UtcNow;
     }
 
-    public static Usuario Create(string email, string nombre, string apellido, string passwordHash, int rolId)
+    public static Usuario Create(string email, string nombre, string apellido, int rolId)
     {
         if (string.IsNullOrWhiteSpace(email))
             throw new DomainException("El email es requerido");
@@ -37,10 +37,7 @@ public class Usuario
             throw new DomainException("El nombre es requerido");
         
         if (string.IsNullOrWhiteSpace(apellido))
-            throw new DomainException("El apellido es obligatorio");
-        
-        if (string.IsNullOrWhiteSpace(passwordHash))
-            throw new ArgumentException("La contrasena no puede estar vacio.");
+            throw new DomainException("El apellido es obligatorio");    
         
         if (rolId <= 0)
             throw new DomainException("El rol es requerido");

@@ -3,17 +3,18 @@ using System.Security.Claims;
 using System.Text;
 using IAM.Application.Interfaces.Authentication;
 using IAM.Domain.Entities;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace IAM.Infrastructure.Authentication;
 
 public class JwtTokenGenerator : IJwtTokenGenerator
 {
-    private readonly IJwtTokenGenerator _jwtTokenGenerator;
+    private readonly IConfiguration _configuration;
 
-    public JwtTokenGenerator(IJwtTokenGenerator jwtTokenGenerator)
+    public JwtTokenGenerator(IConfiguration configuration)
     {
-        _jwtTokenGenerator = jwtTokenGenerator;
+        _configuration = configuration;
     }
     
     public string GenerateToken(Usuario usuario)

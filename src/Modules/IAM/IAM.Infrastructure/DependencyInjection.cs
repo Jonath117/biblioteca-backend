@@ -1,3 +1,4 @@
+using IAM.Infrastructure.Authentication;
 using IAM.Infrastructure.Persistence.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -9,7 +10,6 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddIamInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        // Configurar Base de Datos
         services.AddDbContext<IamDbContext>(options =>
         {
             options.UseNpgsql(configuration.GetConnectionString("PostgresConnection"));
@@ -17,6 +17,8 @@ public static class DependencyInjection
 
         // Aquí más adelante registrar los Repositorios de IAM
         // Ejemplo: services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+
+        services.AddScoped<JwtTokenGenerator>();
 
         return services;
     }

@@ -1,4 +1,5 @@
 using Catalog.Infrastructure;
+using IAM.Application;
 using IAM.Infrastructure;
 using Workflow.Infrastructure;
 using Workspace.Infrastructure;
@@ -6,6 +7,8 @@ using Workspace.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddIamInfrastructure(builder.Configuration);
+builder.Services.AddIamApplication();
+
 builder.Services.AddWorkspaceInfrastructure(builder.Configuration);
 builder.Services.AddWorkflowInfrastructure(builder.Configuration);
 builder.Services.AddCatalogInfrastructure(builder.Configuration);

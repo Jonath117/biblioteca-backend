@@ -1,5 +1,4 @@
-using IAM.Application.Interfaces.Authentication;
-using IAM.Application.Interfaces.Repository;
+using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace IAM.Application;
@@ -8,9 +7,9 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddIamApplication(this IServiceCollection services)
     {
-        services.AddScoped<IUsuarioRepository>();
-        services.AddScoped<IJwtTokenGenerator>();
-        
+        services.AddMediatR(cfg => {
+            cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+        });
         return services;
     }
 }

@@ -1,3 +1,5 @@
+using IAM.Application.Interfaces.Authentication;
+using IAM.Application.Interfaces.Repository;
 using IAM.Infrastructure.Authentication;
 using IAM.Infrastructure.Persistence.Configurations;
 using IAM.Infrastructure.Persistence.Repositories;
@@ -15,12 +17,10 @@ public static class DependencyInjection
         {
             options.UseNpgsql(configuration.GetConnectionString("PostgresConnection"));
         });
+        
 
-        // Aquí más adelante registrar los Repositorios de IAM
-        // Ejemplo: services.AddScoped<IUsuarioRepository, UsuarioRepository>();
-
-        services.AddScoped<JwtTokenGenerator>();
-        services.AddScoped<UsuarioRepository>();
+        services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+        services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
         return services;
     }

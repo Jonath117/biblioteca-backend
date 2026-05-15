@@ -13,9 +13,11 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.7" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Modules\IAM\IAM.Presentation\IAM.Presentation.csproj" />
     <ProjectReference Include="..\..\Modules\Workspace\Workspace.Infrastructure\Workspace.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\IAM\IAM.Infrastructure\IAM.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\Workflow\Workflow.Infrastructure\Workflow.Infrastructure.csproj" />

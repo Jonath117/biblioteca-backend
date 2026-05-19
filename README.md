@@ -19,13 +19,50 @@ Antes de levantar el proyecto, asegúrate de tener instalado lo siguiente en tu 
 
 Sigue estos pasos en orden para configurar el entorno en tu máquina por primera vez.
 
-### 1. Levantar la Base de Datos (Docker)
-No necesitas instalar PostgreSQL directamente. El proyecto incluye un archivo `docker-compose.yml` que levanta un contenedor aislado.  
-Copia el .env.example y completa las credenciales  
-Abre una terminal en la raíz del proyecto y ejecuta:
+### 1. Levantar la Infraestructura Local (Docker)
+El proyecto incluye un archivo `docker-compose.yml` que levanta los servicios requeridos localmente:
+- **PostgreSQL:** Servidor de base de datos relacional.
+- **MinIO:** Emulador local de AWS S3 para el almacenamiento de archivos (como borradores académicos en formato PDF).
+
+Copia el archivo `.env.example` y renómbralo a `.env`, completa las credenciales de desarrollo y ejecuta:
 ```bash
 docker-compose up -d
 ```
+
+#### Consola Web de MinIO (S3 Local)
+Puedes gestionar visualmente los archivos subidos accediendo a:
+- **URL:** http://localhost:9001
+- **Usuario:** `minioadmin`
+- **Contraseña:** `minioadminpassword`
+
+---
+
+## Configuración de Almacenamiento (Local vs S3)
+
+En `src/Core/Web.API/appsettings.Development.json` se encuentra la sección `StorageSettings` para controlar dónde se almacenan físicamente los borradores cargados:
+
+```json
+  "StorageSettings": {
+    "Provider": "S3", // Opciones: "Local" o "S3"
+    "Local": {
+      "UploadPath": "wwwroot/uploads/workspace"
+    },
+    "S3": {
+      "BucketName": "workspace-bucket",
+      "AccessKey": "minioadmin",
+      "SecretKey": "minioadminpassword",
+      "Region": "us-east-1",
+      "ServiceUrl": "http://localhost:9000" // Endpoint de MinIO local. Dejar en blanco en AWS real.
+    }
+  }
+```
+
+- **Proveedor Local ("Local"):** Los archivos se guardarán físicamente en el disco duro del servidor en la carpeta definida.
+- **Proveedor S3 Local ("S3" + ServiceUrl):** Guarda los archivos en el contenedor de MinIO. El sistema creará de forma automática el bucket `workspace-bucket` al procesar la primera carga.
+- **Proveedor S3 Nube ("S3" sin ServiceUrl):** Si se deja en blanco el parámetro `ServiceUrl`, el backend conectará directamente con AWS S3 real utilizando las credenciales proporcionadas.
+
+---
+
 
 ## Restaurar Herramientas y Paquetes
 Para asegurarte de que tienes Entity Framework Core CLI instalado y las dependencias del proyecto, ejecuta:

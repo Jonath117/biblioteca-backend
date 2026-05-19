@@ -12,5 +12,20 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data # Hace que los datos no se borren si se apaga el contenedor
 
+  minio:
+    image: minio/minio:latest
+    container_name: ucb_minio
+    restart: always
+    ports:
+      - "9000:9000" # Puerto de la API de S3
+      - "9001:9001" # Puerto de la Consola Web de Administración
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadminpassword
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+
 volumes:
   pgdata:
+  minio_data:

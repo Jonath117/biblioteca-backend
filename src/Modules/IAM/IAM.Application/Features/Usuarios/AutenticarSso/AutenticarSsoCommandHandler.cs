@@ -5,7 +5,7 @@ using IAM.Domain.Entities;
 using IAM.Domain.Exceptions;
 using MediatR;
 
-namespace IAM.Application.Features.Usuarios.LoginConGoogle;
+namespace IAM.Application.Features.Usuarios.AutenticarSso;
 
 public class AutenticarSsoCommandHandler : IRequestHandler<AutenticarSsoCommand, string>
 {

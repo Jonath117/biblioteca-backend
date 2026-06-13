@@ -1,4 +1,4 @@
-using IAM.Application.Features.Usuarios.CrearUsuario;
+using IAM.Application.Features.Usuarios.AutenticarSso;
 using IAM.Presentation.Requests;
 using MediatR;
 

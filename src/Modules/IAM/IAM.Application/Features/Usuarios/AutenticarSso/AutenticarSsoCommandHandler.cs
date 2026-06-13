@@ -5,7 +5,7 @@ using IAM.Domain.Entities;
 using IAM.Domain.Exceptions;
 using MediatR;
 
-namespace IAM.Application.Features.Usuarios.CrearUsuario;
+namespace IAM.Application.Features.Usuarios.LoginConGoogle;
 
 public class AutenticarSsoCommandHandler : IRequestHandler<AutenticarSsoCommand, string>
 {
@@ -41,7 +41,7 @@ public class AutenticarSsoCommandHandler : IRequestHandler<AutenticarSsoCommand,
 
         if (usuario == null)
         {
-            usuario = Usuario.Create(
+            usuario = Usuario.CreateSSO(
                 payload.Email,
                 payload.GivenName,
                 payload.FamilyName,

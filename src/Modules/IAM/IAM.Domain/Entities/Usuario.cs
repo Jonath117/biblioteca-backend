@@ -8,7 +8,7 @@ public class Usuario
     public string Email { get; private set; } = string.Empty;
     public string Nombre { get; private set; } = string.Empty;
     public string Apellido { get; private set; } = string.Empty;
-    public string PasswordHash { get; private set; } = string.Empty;
+    public string? PasswordHash { get; private set; }
     public int RolId { get; private set; }
     public bool Activo { get; private set; } = true;
     public DateTime FechaRegistro { get; private set; }
@@ -17,32 +17,48 @@ public class Usuario
 
     private Usuario(){ }
 
-    private Usuario(string email, string nombre, string apellido, int rolId)
+    private Usuario(string email, string nombre, string apellido, int rolId, string? passwordHash = null)
     {
         Id = Guid.NewGuid();
         Email = email;
         Nombre = nombre;
         Apellido = apellido;
         RolId = rolId;
+        PasswordHash = passwordHash;
         Activo = true;
         FechaRegistro = DateTime.UtcNow;
     }
+    
+    public static Usuario CreateSSO(string email, string nombre, string apellido, int rolId)
+    {
+        ValidarDatosBase(email, nombre, apellido, rolId);
+        
+        return new Usuario(email.Trim().ToLowerInvariant(), nombre.Trim(), apellido.Trim(), rolId);
+    }
 
-    public static Usuario Create(string email, string nombre, string apellido, int rolId)
+    public static Usuario CreateManual(string email, string nombre, string apellido, string passwordHash, int rolId)
+    {
+        ValidarDatosBase(email, nombre, apellido, rolId);
+        
+        if (string.IsNullOrWhiteSpace(passwordHash))
+            throw new DomainException("La contraseña es requerida para el registro manual.");
+
+        return new Usuario(email.Trim().ToLowerInvariant(), nombre.Trim(), apellido.Trim(), rolId, passwordHash);
+    }
+    
+    private static void ValidarDatosBase(string email, string nombre, string apellido, int rolId)
     {
         if (string.IsNullOrWhiteSpace(email))
-            throw new DomainException("El email es requerido");
+            throw new DomainException("El email es requerido.");
         
         if (string.IsNullOrWhiteSpace(nombre))
-            throw new DomainException("El nombre es requerido");
+            throw new DomainException("El nombre es requerido.");
         
         if (string.IsNullOrWhiteSpace(apellido))
-            throw new DomainException("El apellido es obligatorio");    
+            throw new DomainException("El apellido es obligatorio.");    
         
         if (rolId <= 0)
-            throw new DomainException("El rol es requerido");
-
-        return new Usuario(email.Trim().ToLowerInvariant(), nombre.Trim(), apellido.Trim(), rolId);
+            throw new DomainException("El rol es requerido.");
     }
 
     public void ActulizarNombre(string nuevoNombre)

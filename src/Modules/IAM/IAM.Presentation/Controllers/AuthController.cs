@@ -1,7 +1,8 @@
+using IAM.Application.Features.Usuarios.AutenticarManual;
 using IAM.Application.Features.Usuarios.AutenticarSso;
+using IAM.Application.Features.Usuarios.RegistrarUsuario;
 using IAM.Presentation.Requests;
 using MediatR;
-
 using Microsoft.AspNetCore.Mvc;
 
 namespace IAM.Presentation.Controllers;
@@ -25,5 +26,23 @@ public class AuthController : ControllerBase
         var token = await _sender.Send(command, cancellationToken);
 
         return Ok(new {Token = token});
+    }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> LoginManual([FromBody] LoginManualRequest request, CancellationToken cancellationToken)
+    {
+        var command = new AutenticarManualCommand(request.Email, request.Password);
+        var token = await _sender.Send(command, cancellationToken);
+        
+        return Ok(new {Token = token});
+    }
+
+    [HttpPost("registro")]
+    public async Task<IActionResult> Registrar([FromBody] RegistroRequest request, CancellationToken cancellationToken)
+    {
+        var command = new RegistrarUsuarioCommand(request.Email, request.Nombre, request.Apellido, request.Password);
+        var usuarioId = await _sender.Send(command, cancellationToken);
+        
+        return Ok(new {Id = usuarioId});
     }
 }

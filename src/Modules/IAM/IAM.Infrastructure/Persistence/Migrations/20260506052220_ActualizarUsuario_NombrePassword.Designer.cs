@@ -3,6 +3,7 @@ using System;
 using IAM.Infrastructure.Persistence.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace IAM.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(IamDbContext))]
-    partial class IamDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260506052220_ActualizarUsuario_NombrePassword")]
+    partial class ActualizarUsuario_NombrePassword
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,23 +41,6 @@ namespace IAM.Infrastructure.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles", "iam");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Nombre = "Estudiante"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Nombre = "Asesor"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Nombre = "Administrador"
-                        });
                 });
 
             modelBuilder.Entity("IAM.Domain.Entities.Usuario", b =>

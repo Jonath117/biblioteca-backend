@@ -17,10 +17,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Modules\IAM\IAM.Presentation\IAM.Presentation.csproj" />
-    <ProjectReference Include="..\..\Modules\Workspace\Workspace.Infrastructure\Workspace.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\IAM\IAM.Application\IAM.Application.csproj" />
     <ProjectReference Include="..\..\Modules\IAM\IAM.Infrastructure\IAM.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\IAM\IAM.Presentation\IAM.Presentation.csproj" />
+
+    <ProjectReference Include="..\..\Modules\Workflow\Workflow.Application\Workflow.Application.csproj" />
     <ProjectReference Include="..\..\Modules\Workflow\Workflow.Infrastructure\Workflow.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\Workflow\Workflow.Presentation\Workflow.Presentation.csproj" />
+
+    <ProjectReference Include="..\..\Modules\Workspace\Workspace.Infrastructure\Workspace.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\Catalog\Catalog.Infrastructure\Catalog.Infrastructure.csproj" />
   </ItemGroup>
 

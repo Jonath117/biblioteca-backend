@@ -1,11 +1,11 @@
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
-namespace IAM.Application;
+namespace Workflow.Application;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddIamApplication(this IServiceCollection services)
+    public static IServiceCollection AddWorkflowApplication(this IServiceCollection services)
     {
         services.AddMediatR(config => {
             config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());

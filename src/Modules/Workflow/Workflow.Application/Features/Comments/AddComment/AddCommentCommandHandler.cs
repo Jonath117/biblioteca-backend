@@ -1,46 +1,34 @@
 using MediatR;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Workflow.Application.Repositories;
-using Workflow.Domain.Entities;
 
-namespace Workflow.Application.Features.Comments.AddComment;
-
-public class AddCommentCommandHandler : IRequestHandler<AddCommentCommand, Guid>
+namespace Workflow.Application.Features.Comments.AddComment
 {
-    private readonly IRevisionRepository _revisionRepository;
-
-    public AddCommentCommandHandler(IRevisionRepository revisionRepository)
+    public class AddCommentCommandHandler : IRequestHandler<AddCommentCommand, Guid>
     {
-        _revisionRepository = revisionRepository;
-    }
+        private readonly IRevisionRepository _revisionRepository;
 
-    public async Task<Guid> Handle(AddCommentCommand request, CancellationToken cancellationToken)
-    {
-        var revision = await _revisionRepository.GetByIdAsync(request.RevisionId, cancellationToken);
-        
-        if (revision == null)
+        public AddCommentCommandHandler(IRevisionRepository revisionRepository)
         {
-            throw new Exception("No se encontró la revisión especificada.");
+            _revisionRepository = revisionRepository;
         }
 
-        var newComment = new ComentarioRevision
+        public async Task<Guid> Handle(AddCommentCommand request, CancellationToken cancellationToken)
         {
-            Id = Guid.NewGuid(),
-            RevisionId = revision.Id,
-            Comentario = request.CommentContent,
-            EsPublico = request.IsPublic,
-            Fecha = DateTime.UtcNow
-        };
+            var revision = await _revisionRepository.GetByIdAsync(request.RevisionId, cancellationToken);
+            
+            if (revision == null)
+            {
+                throw new Exception($"Revisión con ID {request.RevisionId} no encontrada.");
+            }
 
+            revision.AgregarComentario(request.AutorId, request.Contenido);
 
-        if (revision.Estado == "Pendiente")
-        {
-            revision.Estado = "En Revisión";
+            await _revisionRepository.UpdateAsync(revision, cancellationToken);
+
+            return revision.Id;
         }
-
-        revision.Comentarios.Add(newComment);
-
-        await _revisionRepository.UpdateAsync(revision, cancellationToken);
-
-        return newComment.Id;
     }
 }

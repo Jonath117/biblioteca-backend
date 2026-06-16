@@ -1,31 +1,34 @@
 using MediatR;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Workflow.Application.Repositories;
-using Workflow.Domain.Entities;
 
-namespace Workflow.Application.Features.Assignments.AssignReviewer;
-
-public class AssignReviewerCommandHandler : IRequestHandler<AssignReviewerCommand, Guid>
+namespace Workflow.Application.Features.Assignments.AssignReviewer
 {
-    private readonly IRevisionRepository _revisionRepository;
-
-    public AssignReviewerCommandHandler(IRevisionRepository revisionRepository)
+    public class AssignReviewerCommandHandler : IRequestHandler<AssignReviewerCommand, bool>
     {
-        _revisionRepository = revisionRepository;
-    }
+        private readonly IRevisionRepository _revisionRepository;
 
-    public async Task<Guid> Handle(AssignReviewerCommand request, CancellationToken cancellationToken)
-    {
-        var newRevision = new Revision
+        public AssignReviewerCommandHandler(IRevisionRepository revisionRepository)
         {
-            Id = Guid.NewGuid(),
-            DocumentoId = request.DocumentId,
-            AsesorId = request.AssessorId,
-            Estado = "Pendiente",
-            FechaAsignacion = DateTime.UtcNow
-        };
+            _revisionRepository = revisionRepository;
+        }
 
-        await _revisionRepository.AddAsync(newRevision, cancellationToken);
+        public async Task<bool> Handle(AssignReviewerCommand request, CancellationToken cancellationToken)
+        {
+            var revision = await _revisionRepository.GetByIdAsync(request.RevisionId, cancellationToken);
+            
+            if (revision == null)
+            {
+                throw new Exception($"No se encontró la revisión con ID {request.RevisionId}"); 
+            }
 
-        return newRevision.Id;
+            revision.AsignarRevisor(request.AsesorId);
+
+            await _revisionRepository.UpdateAsync(revision, cancellationToken);
+            
+            return true;
+        }
     }
 }

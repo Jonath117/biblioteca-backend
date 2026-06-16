@@ -1,5 +1,7 @@
 using MediatR;
+using System;
 
-namespace Workflow.Application.Features.Comments.AddComment;
-
-public record AddCommentCommand(Guid RevisionId, string CommentContent, bool IsPublic) : IRequest<Guid>;
+namespace Workflow.Application.Features.Comments.AddComment
+{
+    public record AddCommentCommand(Guid RevisionId, Guid AutorId, string Contenido) : IRequest<Guid>;
+}

@@ -6,8 +6,9 @@ namespace Workflow.Domain.Entities
     {
         public Guid Id { get; private set; }
         public Guid RevisionId { get; private set; }
+        public Revision Revision { get; private set; } = null!;
         public Guid AutorId { get; private set; }
-        public string Contenido { get; private set; }
+        public string Contenido { get; private set; } = null!;
         public DateTime FechaCreacion { get; private set; }
 
         private ComentarioRevision() { }

@@ -1,13 +1,68 @@
-namespace Workflow.Domain.Entities;
+using System;
+using System.Collections.Generic;
 
-public class Revision
+namespace Workflow.Domain.Entities
 {
-    public Guid Id { get; set; }
-    public Guid DocumentoId { get; set; }
-    public Guid AsesorId { get; set; }
-    public string Estado { get; set; } = "Pendiente";
-    public DateTime FechaAsignacion { get; set; }
-    public DateTime? FechaResolucion { get; set; }
+    public class Revision
+    {
+        public Guid Id { get; private set; }
+        public Guid DocumentoId { get; private set; }
+        public Guid? AsesorId { get; private set; }
+        public EstadoRevision Estado { get; private set; }
+        public DateTime FechaAsignacion { get; private set; }
+        public DateTime? FechaResolucion { get; private set; }
+        
+        private readonly List<ComentarioRevision> _comentarios = new();
+        public IReadOnlyCollection<ComentarioRevision> Comentarios => _comentarios.AsReadOnly();
 
-    public ICollection<ComentarioRevision> Comentarios { get; set; } = new List<ComentarioRevision>();
+        private Revision() { }
+
+        public static Revision Crear(Guid documentoId)
+        {
+            return new Revision
+            {
+                Id = Guid.NewGuid(),
+                DocumentoId = documentoId,
+                Estado = EstadoRevision.Pendiente,
+                FechaAsignacion = DateTime.UtcNow
+            };
+        }
+
+        public void AsignarRevisor(Guid asesorId)
+        {
+            if (Estado != EstadoRevision.Pendiente)
+                throw new InvalidOperationException("Solo se pueden asignar revisores a documentos pendientes.");
+
+            AsesorId = asesorId;
+            Estado = EstadoRevision.EnRevision;
+        }
+
+        public void AgregarComentario(Guid autorComentarioId, string contenido)
+        {
+            if (Estado != EstadoRevision.EnRevision)
+                throw new InvalidOperationException("Solo se pueden agregar comentarios durante la revisión.");
+
+            var comentario = ComentarioRevision.Crear(this.Id, autorComentarioId, contenido);
+            _comentarios.Add(comentario);
+        }
+
+        public void Resolver(EstadoRevision nuevoEstado)
+        {
+            if (nuevoEstado == EstadoRevision.Pendiente || nuevoEstado == EstadoRevision.EnRevision)
+                throw new ArgumentException("Estado de resolución inválido.");
+
+            Estado = nuevoEstado;
+            FechaResolucion = DateTime.UtcNow;
+            
+        }
+    }
+
+    public enum EstadoRevision
+    {
+        Pendiente,
+        EnRevision,
+        Aprobado,
+        Rechazado,
+        RequiereCorreccion
+    }
 }

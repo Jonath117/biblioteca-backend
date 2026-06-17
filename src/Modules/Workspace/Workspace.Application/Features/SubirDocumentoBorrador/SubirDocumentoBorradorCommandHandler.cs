@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Workspace.Application.Common.Abstractions;
 using Workspace.Application.Common.Interfaces;
 using Workspace.Application.Common.Models;
@@ -13,15 +14,19 @@ public class SubirDocumentoBorradorCommandHandler : ICommandHandler<SubirDocumen
     private readonly IDocumentoRepository _documentoRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IFileStorageService _fileStorageService;
+    
+    private readonly IPublisher _publisher;
 
     public SubirDocumentoBorradorCommandHandler(
         IDocumentoRepository documentoRepository,
         IUnitOfWork unitOfWork,
-        IFileStorageService fileStorageService)
+        IFileStorageService fileStorageService,
+        IPublisher publisher)
     {
         _documentoRepository = documentoRepository;
         _unitOfWork = unitOfWork;
         _fileStorageService = fileStorageService;
+        _publisher = publisher;
     }
 
     public async Task<Result<Guid>> Handle(SubirDocumentoBorradorCommand request, CancellationToken cancellationToken)
@@ -71,6 +76,9 @@ public class SubirDocumentoBorradorCommandHandler : ICommandHandler<SubirDocumen
             await _documentoRepository.AddAsync(documento, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
+            var evento = new DocumentoSubidoEvent(documentoId, request.AutorPrincipalId, request.Titulo);
+            await _publisher.Publish(evento, cancellationToken);
+            
             return Result.Success(documentoId);
         }
         catch (Exception ex)

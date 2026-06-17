@@ -8,13 +8,16 @@ using Workflow.Application.Repositories;
 
 namespace Workflow.Application.Features.Revisions.GetAll
 {
+    public record ComentarioDto(Guid Id, Guid AutorId, string Contenido, DateTime FechaCreacion);
+
     public record RevisionDto(
         Guid Id,
         Guid DocumentoId,
         Guid? AsesorId,
         string Estado,
         DateTime FechaAsignacion,
-        DateTime? FechaResolucion
+        DateTime? FechaResolucion,
+        List<ComentarioDto> Comentarios
     );
 
     public record GetAllRevisionesQuery() : IRequest<List<RevisionDto>>;
@@ -38,7 +41,13 @@ namespace Workflow.Application.Features.Revisions.GetAll
                 r.AsesorId,
                 r.Estado.ToString(),
                 r.FechaAsignacion,
-                r.FechaResolucion
+                r.FechaResolucion,
+                r.Comentarios.Select(c => new ComentarioDto(
+                    c.Id, 
+                    c.AutorId, 
+                    c.Contenido, 
+                    c.FechaCreacion
+                )).OrderByDescending(c => c.FechaCreacion).ToList()
             )).ToList();
         }
     }

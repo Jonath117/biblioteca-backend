@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Workflow.Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class Inicial_Workflow : Migration
+    public partial class Initial_Workflow : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -21,8 +21,8 @@ namespace Workflow.Infrastructure.Persistence.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     DocumentoId = table.Column<Guid>(type: "uuid", nullable: false),
-                    AsesorId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Estado = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    AsesorId = table.Column<Guid>(type: "uuid", nullable: true),
+                    Estado = table.Column<int>(type: "integer", maxLength: 50, nullable: false),
                     FechaAsignacion = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     FechaResolucion = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
@@ -38,9 +38,9 @@ namespace Workflow.Infrastructure.Persistence.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     RevisionId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Comentario = table.Column<string>(type: "text", nullable: false),
-                    EsPublico = table.Column<bool>(type: "boolean", nullable: false),
-                    Fecha = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    AutorId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Contenido = table.Column<string>(type: "text", nullable: false),
+                    FechaCreacion = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {

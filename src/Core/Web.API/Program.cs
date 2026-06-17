@@ -2,22 +2,26 @@ using Catalog.Infrastructure;
 using IAM.Application;
 using IAM.Infrastructure;
 using IAM.Presentation;
+using Workflow.Application;
 using Workflow.Infrastructure;
 using Workspace.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddControllers();
+
 builder.Services.AddIamInfrastructure(builder.Configuration);
 builder.Services.AddIamApplication();
 builder.Services.AddIamPresentation();
 
-builder.Services.AddWorkspaceInfrastructure(builder.Configuration);
+builder.Services.AddWorkflowApplication();
 builder.Services.AddWorkflowInfrastructure(builder.Configuration);
+
+builder.Services.AddWorkspaceInfrastructure(builder.Configuration);
 builder.Services.AddCatalogInfrastructure(builder.Configuration);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddCors(options =>
 {
@@ -30,28 +34,18 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddEndpointsApiExplorer();
-
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
+    app.MapOpenApi();
     app.UseSwaggerUI(options => 
     {
-        // Define la ruta del endpoint OpenAPI
         options.SwaggerEndpoint("/openapi/v1.json", "Mi API v1");
     });
 }
 
 app.UseCors("FrontendPolicy");
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
-
-//app.UseHttpsRedirection();
 
 app.MapControllers();
 

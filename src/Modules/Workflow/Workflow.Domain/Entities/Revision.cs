@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Workflow.Domain.Entities
 {
@@ -8,7 +9,10 @@ namespace Workflow.Domain.Entities
         public Guid Id { get; private set; }
         public Guid DocumentoId { get; private set; }
         public Guid? AsesorId { get; private set; }
+        
+        [Column(TypeName = "integer")]
         public EstadoRevision Estado { get; private set; }
+        
         public DateTime FechaAsignacion { get; private set; }
         public DateTime? FechaResolucion { get; private set; }
         

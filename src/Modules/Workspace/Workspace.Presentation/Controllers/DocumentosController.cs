@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Workspace.Application.Features.ObtenerDocumentosPorAutor;
@@ -11,6 +12,7 @@ namespace Workspace.Presentation.Controllers;
 
 [ApiController]
 [Route("api/workspace/documentos")]
+[Authorize]
 public class DocumentosController : ControllerBase
 {
     private readonly ISender _sender;
@@ -23,7 +25,8 @@ public class DocumentosController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> ObtenerDocumentos()
     {
-        var autorIdClaim = User.FindFirst("sub");
+        var autorIdClaim = User.FindFirst("sub")
+                           ?? User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
         
         if (autorIdClaim == null || !Guid.TryParse(autorIdClaim.Value, out var autorId))
         {

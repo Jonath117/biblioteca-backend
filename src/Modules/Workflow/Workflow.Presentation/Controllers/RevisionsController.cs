@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Workflow.Application.Features.Assignments.AssignReviewer;
 using Workflow.Application.Features.Comments.AddComment;
 using Workflow.Application.Features.Revisions.GetAll;
+using Workflow.Application.Features.Revisions.ResolveRevision;
+using Workflow.Domain.Entities;
 
 namespace Workflow.Presentation.Controllers
 {
@@ -66,8 +68,24 @@ namespace Workflow.Presentation.Controllers
                 return BadRequest(new { Error = ex.Message });
             }
         }
+
+        [HttpPost("{id}/resolve")]
+        public async Task<IActionResult> Resolve(Guid id, [FromBody] ResolveRevisionRequest request)
+        {
+            try
+            {
+                var command = new ResolveRevisionCommand(id, (EstadoRevision)request.NuevoEstado);
+                await _sender.Send(command);
+                return Ok(new { Message = "Estado de revision actualizado con exito." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Error = ex.Message });
+            }
+        }
     }
 
     public record AssignReviewerRequest(Guid AsesorId);
     public record AddCommentRequest(Guid AutorId, string Contenido);
+    public record ResolveRevisionRequest(int NuevoEstado);
 }

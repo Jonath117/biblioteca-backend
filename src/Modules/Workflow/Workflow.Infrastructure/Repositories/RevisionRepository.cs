@@ -20,7 +20,9 @@ namespace Workflow.Infrastructure.Repositories
 
         public async Task<Revision?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            return await _context.Revisiones.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            return await _context.Revisiones
+                .Include(r => r.Comentarios)
+                .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         }
 
         public async Task AddAsync(Revision revision, CancellationToken cancellationToken = default)
@@ -31,13 +33,25 @@ namespace Workflow.Infrastructure.Repositories
 
         public async Task UpdateAsync(Revision revision, CancellationToken cancellationToken = default)
         {
-            _context.Revisiones.Update(revision);
+            _context.ChangeTracker.DetectChanges();
+
+
+            foreach (var entry in _context.ChangeTracker.Entries<ComentarioRevision>())
+            {
+                if (entry.State == EntityState.Modified)
+                {
+                    entry.State = EntityState.Added;
+                }
+            }
+
             await _context.SaveChangesAsync(cancellationToken);
         }
 
         public async Task<IReadOnlyList<Revision>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            return await _context.Revisiones.ToListAsync(cancellationToken);
+            return await _context.Revisiones
+                .Include(r => r.Comentarios)
+                .ToListAsync(cancellationToken);
         }
     }
 }

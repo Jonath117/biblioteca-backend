@@ -1,45 +1,43 @@
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Workflow.Application.Repositories;
 using Workflow.Domain.Entities;
 using Workflow.Infrastructure.Configurations;
 
-namespace Workflow.Infrastructure.Repositories;
-
-public class RevisionRepository : IRevisionRepository
+namespace Workflow.Infrastructure.Repositories
 {
-    private readonly WorkflowDbContext _context;
-
-    public RevisionRepository(WorkflowDbContext context)
+    public class RevisionRepository : IRevisionRepository
     {
-        _context = context;
-    }
+        private readonly WorkflowDbContext _context;
 
-    public async Task AddAsync(Revision revision, CancellationToken cancellationToken = default)
-    {
-        await _context.Set<Revision>().AddAsync(revision, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
-    }
+        public RevisionRepository(WorkflowDbContext context)
+        {
+            _context = context;
+        }
 
-    public async Task<Revision?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
-    {
-        return await _context.Set<Revision>()
-            .Include(r => r.Comentarios)
-            .FirstOrDefaultAsync(r => r.Id == id, cancellationToken);
-    }
+        public async Task<Revision?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        {
+            return await _context.Revisiones.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+        }
 
-    public async Task<Revision?> GetByDocumentoIdAsync(Guid documentoId, CancellationToken cancellationToken = default)
-    {
-        return await _context.Set<Revision>()
-            .Include(r => r.Comentarios)
-            .FirstOrDefaultAsync(r => r.DocumentoId == documentoId, cancellationToken);
-    }
+        public async Task AddAsync(Revision revision, CancellationToken cancellationToken = default)
+        {
+            await _context.Revisiones.AddAsync(revision, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
+        }
 
-    public async Task UpdateAsync(Revision revision, CancellationToken cancellationToken = default)
-    {
-        _context.Set<Revision>().Update(revision);
-        await _context.SaveChangesAsync(cancellationToken);
+        public async Task UpdateAsync(Revision revision, CancellationToken cancellationToken = default)
+        {
+            _context.Revisiones.Update(revision);
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task<IReadOnlyList<Revision>> GetAllAsync(CancellationToken cancellationToken = default)
+        {
+            return await _context.Revisiones.ToListAsync(cancellationToken);
+        }
     }
 }

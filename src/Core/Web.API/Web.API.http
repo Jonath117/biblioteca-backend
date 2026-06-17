@@ -4,3 +4,34 @@ GET {{Web.API_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+# Subir un borrador de documento académico a S3 local
+POST {{Web.API_HostAddress}}/api/workspace/documentos/subir-borrador
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="autorPrincipalId"
+
+3fa85f64-5717-4562-b3fc-2c963f66afa6
+--WebAppBoundary
+Content-Disposition: form-data; name="titulo"
+
+Modelos de Monolitos Modulares en .NET 10
+--WebAppBoundary
+Content-Disposition: form-data; name="resumen"
+
+Este documento presenta una guía práctica sobre la implementación de casos de uso bajo Clean Architecture.
+--WebAppBoundary
+Content-Disposition: form-data; name="coautoresIds"
+
+7c9e6679-7425-40de-944b-e07fc1f90ae7
+--WebAppBoundary
+Content-Disposition: form-data; name="coautoresIds"
+
+d3b0c442-98fc-1c14-9afb-f4e99e21c65d
+--WebAppBoundary
+Content-Disposition: form-data; name="archivo"; filename="borrador.pdf"
+Content-Type: application/pdf
+
+< ./borrador.pdf
+--WebAppBoundary--

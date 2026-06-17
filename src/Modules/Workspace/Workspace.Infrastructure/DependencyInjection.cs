@@ -1,7 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Workspace.Application.Common.Interfaces;
 using Workspace.Infrastructure.Persistence.Configurations;
+using Workspace.Infrastructure.Persistence.Repositories;
+using Workspace.Infrastructure.Storage;
 
 namespace Workspace.Infrastructure;
 
@@ -15,8 +18,21 @@ public static class DependencyInjection
             options.UseNpgsql(configuration.GetConnectionString("PostgresConnection"));
         });
 
-        // Aquí más adelante registrar los Repositorios de Workspace
-        // Ejemplo: services.AddScoped<IDocumentoRepository, DocumentoRepository>();
+        // Registrar Repositorios y Unit of Work
+        services.AddScoped<IDocumentoRepository, DocumentoRepository>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        // Configuración dinámica de almacenamiento (S3 vs Local)
+        var storageProvider = configuration["StorageSettings:Provider"] ?? "Local";
+        
+        if (storageProvider.Equals("S3", System.StringComparison.OrdinalIgnoreCase))
+        {
+            services.AddScoped<IFileStorageService, S3FileStorageService>();
+        }
+        else
+        {
+            services.AddScoped<IFileStorageService, LocalFileStorageService>();
+        }
 
         return services;
     }

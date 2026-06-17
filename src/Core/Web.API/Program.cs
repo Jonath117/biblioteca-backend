@@ -30,6 +30,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Secret"]!))
         };
+        options.MapInboundClaims = false;
     });
 
 builder.Services.AddAuthorization();
@@ -46,8 +47,6 @@ builder.Services.AddWorkspaceInfrastructure(builder.Configuration);
 builder.Services.AddWorkspaceApplication();
 builder.Services.AddWorkspacePresentation();
 
-
-builder.Services.AddWorkspaceInfrastructure(builder.Configuration);
 builder.Services.AddCatalogInfrastructure(builder.Configuration);
 
 builder.Services.AddOpenApi();
@@ -75,9 +74,10 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseCors("FrontendPolicy");
+
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors("FrontendPolicy");
 
 app.MapControllers();
 

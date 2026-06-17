@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -27,5 +28,14 @@ public class DocumentoRepository : IDocumentoRepository
         return await _dbContext.Documentos
             .Include(d => d.Coautores)
             .FirstOrDefaultAsync(d => d.Id == id, cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<Documento>> GetByAutorPrincipalIdAsync(Guid autorPrincipalId, CancellationToken cancellationToken)
+    {
+        return await _dbContext.Documentos
+            .Include(d => d.Coautores)
+            .Where(d => d.AutorPrincipalId == autorPrincipalId)
+            .OrderByDescending(d => d.FechaCreacion)
+            .ToListAsync(cancellationToken);
     }
 }

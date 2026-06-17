@@ -48,6 +48,14 @@ public class DocumentosController : ControllerBase
     [Consumes("multipart/form-data")]
     public async Task<IActionResult> SubirBorrador([FromForm] SubirDocumentoBorradorRequest request)
     {
+        var autorIdClaim = User.FindFirst("sub")
+                           ?? User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+
+        if (autorIdClaim == null || !Guid.TryParse(autorIdClaim.Value, out var autorId))
+        {
+            return Unauthorized(new { Error = "No se pudo identificar al usuario desde el token." });
+        }
+
         if (request.Archivo == null || request.Archivo.Length == 0)
         {
             return BadRequest(new { Error = "El archivo es obligatorio y no puede estar vacío." });
@@ -56,7 +64,7 @@ public class DocumentosController : ControllerBase
         using var stream = request.Archivo.OpenReadStream();
 
         var command = new SubirDocumentoBorradorCommand(
-            request.AutorPrincipalId,
+            autorId,
             request.Titulo,
             request.Resumen,
             stream,
@@ -77,7 +85,6 @@ public class DocumentosController : ControllerBase
 
 public class SubirDocumentoBorradorRequest
 {
-    public Guid AutorPrincipalId { get; set; }
     public string Titulo { get; set; } = string.Empty;
     public string Resumen { get; set; } = string.Empty;
     public IFormFile Archivo { get; set; } = null!;

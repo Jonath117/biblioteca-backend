@@ -38,6 +38,23 @@ namespace IAM.Infrastructure.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles", "iam");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Nombre = "Estudiante"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Nombre = "Asesor"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Nombre = "Administrador"
+                        });
                 });
 
             modelBuilder.Entity("IAM.Domain.Entities.Usuario", b =>
@@ -49,6 +66,11 @@ namespace IAM.Infrastructure.Persistence.Migrations
                     b.Property<bool>("Activo")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("Apellido")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(150)
@@ -57,10 +79,14 @@ namespace IAM.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("FechaRegistro")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("NombreCompleto")
+                    b.Property<string>("Nombre")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.Property<int>("RolId")
                         .HasColumnType("integer");

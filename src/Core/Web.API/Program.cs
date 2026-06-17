@@ -46,20 +46,38 @@ builder.Services.AddWorkspaceInfrastructure(builder.Configuration);
 builder.Services.AddWorkspaceApplication();
 builder.Services.AddWorkspacePresentation();
 
+
+builder.Services.AddWorkspaceInfrastructure(builder.Configuration);
 builder.Services.AddCatalogInfrastructure(builder.Configuration);
 
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("FrontendPolicy", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173") 
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials(); 
+    });
+});
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwaggerUI(options => 
+    {
+        options.SwaggerEndpoint("/openapi/v1.json", "Mi API v1");
+    });
 }
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseCors("FrontendPolicy");
 
 app.MapControllers();
 

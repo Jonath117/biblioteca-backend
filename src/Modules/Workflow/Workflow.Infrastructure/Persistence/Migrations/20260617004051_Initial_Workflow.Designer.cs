@@ -12,14 +12,15 @@ using Workflow.Infrastructure.Configurations;
 namespace Workflow.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(WorkflowDbContext))]
-    [Migration("20260429181338_Inicial_Workflow")]
-    partial class Inicial_Workflow
+    [Migration("20260617004051_Initial_Workflow")]
+    partial class Initial_Workflow
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("workflow")
                 .HasAnnotation("ProductVersion", "10.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -31,14 +32,14 @@ namespace Workflow.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Comentario")
+                    b.Property<Guid>("AutorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Contenido")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("EsPublico")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime>("Fecha")
+                    b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("RevisionId")
@@ -57,16 +58,15 @@ namespace Workflow.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("AsesorId")
+                    b.Property<Guid?>("AsesorId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("DocumentoId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Estado")
-                        .IsRequired()
+                    b.Property<int>("Estado")
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("FechaAsignacion")
                         .HasColumnType("timestamp with time zone");

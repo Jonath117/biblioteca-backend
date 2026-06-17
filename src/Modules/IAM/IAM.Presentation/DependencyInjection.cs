@@ -1,6 +1,18 @@
+using System.Reflection;
+using IAM.Presentation.Controllers;
+using Microsoft.Extensions.DependencyInjection;
+
 namespace IAM.Presentation;
 
-public class DependencyInjection
+public static class DependencyInjection
 {
-    
+    public static IServiceCollection AddIamPresentation(this IServiceCollection services)
+    {
+        var assembly = typeof(DependencyInjection).Assembly;
+        
+        services.AddControllers()
+            .AddApplicationPart(assembly);
+
+        return services;
+    }
 }

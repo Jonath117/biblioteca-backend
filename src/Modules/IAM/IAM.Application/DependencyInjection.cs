@@ -1,6 +1,16 @@
+using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
+
 namespace IAM.Application;
 
-public class DependencyInjection
+public static class DependencyInjection
 {
-    
+    public static IServiceCollection AddIamApplication(this IServiceCollection services)
+    {
+        services.AddMediatR(config => {
+            config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+        });
+
+        return services;
+    }
 }

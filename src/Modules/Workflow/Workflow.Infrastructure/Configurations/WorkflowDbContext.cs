@@ -12,6 +12,7 @@ public class WorkflowDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.HasDefaultSchema("workflow");
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(WorkflowDbContext).Assembly);
         base.OnModelCreating(modelBuilder);
     }

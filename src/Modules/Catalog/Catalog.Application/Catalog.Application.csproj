@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\IAM\IAM.Application\IAM.Application.csproj" />
       <ProjectReference Include="..\..\Workflow\Workflow.Application\Workflow.Application.csproj" />
       <ProjectReference Include="..\..\Workspace\Workspace.Application\Workspace.Application.csproj" />
       <ProjectReference Include="..\Catalog.Domain\Catalog.Domain.csproj" />

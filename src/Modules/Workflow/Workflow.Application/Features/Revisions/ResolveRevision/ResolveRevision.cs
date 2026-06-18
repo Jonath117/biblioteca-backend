@@ -1,7 +1,6 @@
 using MediatR;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
+using Workflow.Application.Features.Revisions.EventHandlers;
+using Workflow.Application.Interfaces;
 using Workflow.Application.Repositories;
 using Workflow.Domain.Entities;
 
@@ -12,10 +11,14 @@ namespace Workflow.Application.Features.Revisions.ResolveRevision
     public class ResolveRevisionCommandHandler : IRequestHandler<ResolveRevisionCommand>
     {
         private readonly IRevisionRepository _repository;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IPublisher _publisher;
 
-        public ResolveRevisionCommandHandler(IRevisionRepository repository)
+        public ResolveRevisionCommandHandler(IRevisionRepository repository, IUnitOfWork unitOfWork, IPublisher publisher)
         {
             _repository = repository;
+            _unitOfWork = unitOfWork;
+            _publisher = publisher;
         }
 
         public async Task Handle(ResolveRevisionCommand request, CancellationToken cancellationToken)
@@ -27,7 +30,15 @@ namespace Workflow.Application.Features.Revisions.ResolveRevision
             }
 
             revision.Resolver(request.NuevoEstado);
+            
             await _repository.UpdateAsync(revision, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            if (request.NuevoEstado == EstadoRevision.Aprobado)
+            {
+                var evento = new RevisionAprobadaEvent(revision.Id, revision.DocumentoId);
+                await _publisher.Publish(evento, cancellationToken);
+            }
         }
     }
 }

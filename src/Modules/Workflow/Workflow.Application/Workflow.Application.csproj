@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Workflow.Domain\Workflow.Domain.csproj" />
+      <ProjectReference Include="..\..\Workspace\Workspace.Application\Workspace.Application.csproj" />
     </ItemGroup>
 
     <ItemGroup>

@@ -1,7 +1,9 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Workflow.Application.Features.Assignments.AssignReviewer;
 using Workflow.Application.Features.Comments.AddComment;
 using Workflow.Application.Features.Revisions.GetAll;
@@ -12,6 +14,7 @@ namespace Workflow.Presentation.Controllers
 {
     [ApiController]
     [Route("api/workflow/revisions")]
+    [Authorize]
     public class RevisionsController : ControllerBase
     {
         private readonly ISender _sender;
@@ -35,13 +38,17 @@ namespace Workflow.Presentation.Controllers
                 return BadRequest(new { Error = ex.Message });
             }
         }
-
+        [Authorize(Roles = "2,3")]
         [HttpPost("{id}/assign-reviewer")]
-        public async Task<IActionResult> AssignReviewer(Guid id, [FromBody] AssignReviewerRequest request)
+        public async Task<IActionResult> AssignReviewer(Guid id)
         {
             try
             {
-                var command = new AssignReviewerCommand(id, request.AsesorId);
+                var asesorIdClaim = User.FindFirst("sub") ?? User.FindFirst(ClaimTypes.NameIdentifier);
+                if (asesorIdClaim == null || !Guid.TryParse(asesorIdClaim.Value, out var asesorId))
+                    return Unauthorized(new { Error = "No se pudo identificar al usuario." });
+
+                var command = new AssignReviewerCommand(id, asesorId);
                 await _sender.Send(command);
                 return Ok(new { Message = "Revisor asignado con éxito." });
             }
@@ -56,12 +63,13 @@ namespace Workflow.Presentation.Controllers
         {
             try
             {
-                var command = new AddCommentCommand(id, request.AutorId, request.Contenido);
+                var autorIdClaim = User.FindFirst("sub") ?? User.FindFirst(ClaimTypes.NameIdentifier);
+                if (autorIdClaim == null || !Guid.TryParse(autorIdClaim.Value, out var autorId))
+                    return Unauthorized(new { Error = "No se pudo identificar al usuario." });
+
+                var command = new AddCommentCommand(id, autorId, request.Contenido);
                 var commentId = await _sender.Send(command);
-                return Ok(new { 
-                    CommentId = commentId, 
-                    Message = "Comentario agregado exitosamente a la revisión." 
-                });
+                return Ok(new { CommentId = commentId, Message = "Comentario agregado." });
             }
             catch (Exception ex)
             {
@@ -70,6 +78,7 @@ namespace Workflow.Presentation.Controllers
         }
 
         [HttpPost("{id}/resolve")]
+        [Authorize(Roles = "2,3")]
         public async Task<IActionResult> Resolve(Guid id, [FromBody] ResolveRevisionRequest request)
         {
             try
@@ -85,7 +94,6 @@ namespace Workflow.Presentation.Controllers
         }
     }
 
-    public record AssignReviewerRequest(Guid AsesorId);
-    public record AddCommentRequest(Guid AutorId, string Contenido);
+    public record AddCommentRequest(string Contenido); 
     public record ResolveRevisionRequest(int NuevoEstado);
 }

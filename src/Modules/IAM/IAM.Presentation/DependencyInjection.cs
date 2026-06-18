@@ -1,5 +1,3 @@
-using System.Reflection;
-using IAM.Presentation.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace IAM.Presentation;

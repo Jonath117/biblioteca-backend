@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Workspace.Application.Features.ObtenerDocumentoPorId;
 using Workspace.Application.Features.ObtenerDocumentosPorAutor;
 using Workspace.Application.Features.SubirDocumentoBorrador;
 
@@ -80,6 +81,21 @@ public class DocumentosController : ControllerBase
         }
 
         return Ok(new { DocumentoId = result.Value });
+    }
+    
+    [HttpGet("{id}")]
+    public async Task<IActionResult> ObtenerDocumentoPorId(Guid id)
+    {
+
+        var query = new ObtenerDocumentoPorIdQuery(id);
+        var result = await _sender.Send(query);
+
+        if (result.IsFailure)
+        {
+            return NotFound(new { Error = result.Error.Message });
+        }
+
+        return Ok(result.Value);
     }
 }
 

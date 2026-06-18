@@ -5,6 +5,8 @@ using IAM.Presentation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Catalog.Application;
+using Catalog.Presentation;
 using Workflow.Application;
 using Workflow.Infrastructure;
 using Workflow.Presentation;
@@ -48,6 +50,8 @@ builder.Services.AddWorkspaceApplication();
 builder.Services.AddWorkspacePresentation();
 
 builder.Services.AddCatalogInfrastructure(builder.Configuration);
+builder.Services.AddCatalogApplication();
+builder.Services.AddCatalogPresentation();
 
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();

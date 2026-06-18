@@ -1,5 +1,6 @@
 using Catalog.Application.Common.Interfaces;
 using Catalog.Infrastructure.Persistence.Configurations;
+using Catalog.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,8 +16,8 @@ public static class DependencyInjection
             options.UseNpgsql(configuration.GetConnectionString("PostgresConnection"));
         });
 
-        services.AddScoped<ICatalogUnitOfWork, ICatalogUnitOfWork>();
-        services.AddScoped<IArticuloPublicadoRepository, IArticuloPublicadoRepository>();
+        services.AddScoped<ICatalogUnitOfWork, CatalogUnitOfWork>();
+        services.AddScoped<IArticuloPublicadoRepository, ArticuloPublicadoRepository>();
         
         return services;
     }

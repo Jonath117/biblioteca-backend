@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Workflow.Application.Interfaces;
 using Workflow.Application.Repositories;
 using Workflow.Infrastructure.Configurations;
 using Workflow.Infrastructure.Repositories;
@@ -16,6 +17,9 @@ public static class DependencyInjection
         {
             options.UseNpgsql(configuration.GetConnectionString("PostgresConnection"));
         });
+        
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        
         return services;
     }
 }

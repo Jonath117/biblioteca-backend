@@ -34,4 +34,9 @@ public class UsuarioRepository : IUsuarioRepository
     {
         return await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
     }
+
+    public async Task<List<Usuario>> GetByIdsAsync(List<Guid> ids, CancellationToken cancellationToken)
+    {
+        return await _context.Usuarios.Where(u => ids.Contains(u.Id)).ToListAsync(cancellationToken);
+    }
 }

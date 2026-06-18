@@ -3,11 +3,11 @@ using Catalog.Infrastructure.Persistence.Configurations;
 
 namespace Catalog.Infrastructure.Persistence.Repositories;
 
-public class UnitOfWork : ICatalogUnitOfWork
+public class CatalogUnitOfWork : ICatalogUnitOfWork
 {
     private readonly CatalogDbContext _context;
 
-    public UnitOfWork(CatalogDbContext context)
+    public CatalogUnitOfWork(CatalogDbContext context)
     {
         _context = context;
     }

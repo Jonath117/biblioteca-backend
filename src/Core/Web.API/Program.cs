@@ -5,6 +5,8 @@ using IAM.Presentation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Catalog.Application;
+using Catalog.Presentation;
 using Workflow.Application;
 using Workflow.Infrastructure;
 using Workflow.Presentation;
@@ -28,7 +30,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
             ValidAudience = builder.Configuration["JwtSettings:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Secret"]!))
+                Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Secret"]!)),
+            RoleClaimType = "role",
+            NameClaimType = "name"
         };
         options.MapInboundClaims = false;
     });
@@ -48,6 +52,8 @@ builder.Services.AddWorkspaceApplication();
 builder.Services.AddWorkspacePresentation();
 
 builder.Services.AddCatalogInfrastructure(builder.Configuration);
+builder.Services.AddCatalogApplication();
+builder.Services.AddCatalogPresentation();
 
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();

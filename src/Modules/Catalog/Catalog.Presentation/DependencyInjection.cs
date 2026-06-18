@@ -1,10 +1,10 @@
 using Microsoft.Extensions.DependencyInjection;
 
-namespace IAM.Presentation;
+namespace Catalog.Presentation;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddIamPresentation(this IServiceCollection services)
+    public static IServiceCollection AddCatalogPresentation(this IServiceCollection services)
     {
         var assembly = typeof(DependencyInjection).Assembly;
         

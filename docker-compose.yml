@@ -1,0 +1,31 @@
+services:
+  db_biblioteca:
+    image: postgres:15-alpine # Versión ligera y estable
+    container_name: ucb_postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER} # Usuario local de desarrollo
+      POSTGRES_PASSWORD: ${DB_PASSWORD} # Contraseña local de desarrollo
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "${DB_PORT}:5432" # Mapea el puerto del contenedor a la computadora
+    volumes:
+      - pgdata:/var/lib/postgresql/data # Hace que los datos no se borren si se apaga el contenedor
+
+  minio:
+    image: minio/minio:latest
+    container_name: ucb_minio
+    restart: always
+    ports:
+      - "9000:9000" # Puerto de la API de S3
+      - "9001:9001" # Puerto de la Consola Web de Administración
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadminpassword
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+
+volumes:
+  pgdata:
+  minio_data:

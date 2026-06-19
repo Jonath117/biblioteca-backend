@@ -1,0 +1,25 @@
+using Catalog.Application.Common.Interfaces;
+using Catalog.Infrastructure.Persistence.Configurations;
+using Catalog.Infrastructure.Persistence.Repositories;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace Catalog.Infrastructure;
+
+public static class DependencyInjection
+{
+    public static IServiceCollection AddCatalogInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddDbContext<CatalogDbContext>(options =>
+        {
+            options.UseNpgsql(configuration.GetConnectionString("PostgresConnection"));
+        });
+
+        services.AddScoped<ICatalogUnitOfWork, CatalogUnitOfWork>();
+        services.AddScoped<IArticuloPublicadoRepository, ArticuloPublicadoRepository>();
+        
+        return services;
+    }
+    
+}

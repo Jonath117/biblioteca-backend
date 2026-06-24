@@ -1,4 +1,7 @@
 services:
+  # ==========================================
+  # INFRAESTRUCTURA DE APOYO
+  # ==========================================
   db_biblioteca:
     image: postgres:15-alpine
     container_name: ucb_postgres_db
@@ -25,6 +28,39 @@ services:
     command: server /data --console-address ":9001"
     volumes:
       - minio_data:/data
+
+  # ==========================================
+  # CAPA DE APLICACIÓN (NUESTROS DOCKERFILES)
+  # ==========================================
+  backend_api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ucb_backend_api
+    restart: always
+    ports:
+      - "5198:8080"
+    env_file:
+      - .env
+    depends_on:
+      - db_biblioteca
+      - minio
+
+  frontend_web:
+    build:
+      context: ../frontend-rep/frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL}
+        VITE_GOOGLE_CLIENT_ID: ${VITE_GOOGLE_CLIENT_ID}
+    container_name: ucb_frontend_web
+    restart: always
+    ports:
+      # Nginx sirve la página en el puerto 80 dentro del contenedor.
+      # Lo mapeamos al 5173 para no romper las políticas de CORS
+      - "5173:80"
+    depends_on:
+      - backend_api
 
 volumes:
   pgdata:

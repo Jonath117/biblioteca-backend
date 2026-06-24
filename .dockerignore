@@ -1,0 +1,8 @@
+.env
+.env.example
+bin/
+obj/
+.git/
+.github/
+.idea/
+.sonarqube/

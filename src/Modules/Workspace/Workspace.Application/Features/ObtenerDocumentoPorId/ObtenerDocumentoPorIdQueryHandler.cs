@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using Workspace.Application.Common.Abstractions;
 using Workspace.Application.Common.Interfaces;
 using Workspace.Application.Common.Models;
@@ -7,10 +8,12 @@ namespace Workspace.Application.Features.ObtenerDocumentoPorId;
 public class ObtenerDocumentoPorIdQueryHandler : IQueryHandler<ObtenerDocumentoPorIdQuery, DocumentoDto>
 {
     private readonly IDocumentoRepository _repository;
+    private readonly IConfiguration _configuration;
     
-    public ObtenerDocumentoPorIdQueryHandler(IDocumentoRepository repository)
+    public ObtenerDocumentoPorIdQueryHandler(IDocumentoRepository repository, IConfiguration configuration)
     {
         _repository = repository;
+        _configuration = configuration;
     }
 
     public async Task<Result<DocumentoDto>> Handle(ObtenerDocumentoPorIdQuery request,

@@ -65,12 +65,11 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("FrontendPolicy", policy =>
+    options.AddPolicy("AllowAll", policy =>
     {
-        policy.WithOrigins("http://localhost:5173") 
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials(); 
+        policy.AllowAnyOrigin()
+            .AllowAnyHeader()  
+            .AllowAnyMethod(); 
     });
 });
 
@@ -85,7 +84,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseCors("FrontendPolicy");
+app.UseCors("AllowAll");
 
 app.UseAuthentication();
 app.UseAuthorization();

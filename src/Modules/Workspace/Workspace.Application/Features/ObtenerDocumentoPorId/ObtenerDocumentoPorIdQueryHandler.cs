@@ -30,7 +30,7 @@ public class ObtenerDocumentoPorIdQueryHandler : IQueryHandler<ObtenerDocumentoP
             documento.AutorPrincipalId,
             documento.Titulo,
             documento.Resumen,
-            documento.ArchivoUrl,
+            documento.ArchivoUrl.Replace("http://minio:9000", "http://localhost:9000"),
             documento.Estado,
             documento.FechaCreacion,
             documento.Coautores.Select(c => c.UsuarioId).ToList()

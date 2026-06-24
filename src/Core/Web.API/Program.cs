@@ -13,8 +13,13 @@ using Workflow.Presentation;
 using Workspace.Application;
 using Workspace.Infrastructure;
 using Workspace.Presentation;
+using DotNetEnv;
+
+Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.AddEnvironmentVariables();
 
 builder.Services.AddControllers();
 

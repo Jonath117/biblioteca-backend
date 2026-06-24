@@ -20,6 +20,7 @@ public static class DependencyInjection
 
         // Registrar Repositorios y Unit of Work
         services.AddScoped<IDocumentoRepository, DocumentoRepository>();
+        services.AddScoped<IEstudianteReplicadoRepository, EstudianteReplicadoRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         // Configuración dinámica de almacenamiento (S3 vs Local)

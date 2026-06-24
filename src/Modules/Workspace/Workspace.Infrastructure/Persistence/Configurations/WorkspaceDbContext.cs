@@ -9,6 +9,7 @@ public class WorkspaceDbContext : DbContext
 
     public DbSet<Documento> Documentos => Set<Documento>();
     public DbSet<Coautor> Coautores => Set<Coautor>();
+    public DbSet<EstudianteReplicado> EstudiantesReplicados => Set<EstudianteReplicado>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

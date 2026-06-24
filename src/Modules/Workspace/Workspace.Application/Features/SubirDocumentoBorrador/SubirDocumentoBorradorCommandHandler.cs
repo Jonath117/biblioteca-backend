@@ -12,6 +12,7 @@ namespace Workspace.Application.Features.SubirDocumentoBorrador;
 public class SubirDocumentoBorradorCommandHandler : ICommandHandler<SubirDocumentoBorradorCommand, Guid>
 {
     private readonly IDocumentoRepository _documentoRepository;
+    private readonly IEstudianteReplicadoRepository _estudianteRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IFileStorageService _fileStorageService;
     
@@ -19,11 +20,13 @@ public class SubirDocumentoBorradorCommandHandler : ICommandHandler<SubirDocumen
 
     public SubirDocumentoBorradorCommandHandler(
         IDocumentoRepository documentoRepository,
+        IEstudianteReplicadoRepository estudianteRepository,
         IUnitOfWork unitOfWork,
         IFileStorageService fileStorageService,
         IPublisher publisher)
     {
         _documentoRepository = documentoRepository;
+        _estudianteRepository = estudianteRepository;
         _unitOfWork = unitOfWork;
         _fileStorageService = fileStorageService;
         _publisher = publisher;
@@ -53,11 +56,21 @@ public class SubirDocumentoBorradorCommandHandler : ICommandHandler<SubirDocumen
                 FechaModificacion = DateTime.UtcNow
             };
 
-            // 3. Gestionar la lista de coautores (tabla intermedia Coautor)
-            if (request.CoautoresIds != null)
+            // 3. Gestionar la lista de coautores buscando por Email
+            if (request.CoautoresEmails != null)
             {
-                foreach (var coautorId in request.CoautoresIds)
+                foreach (var email in request.CoautoresEmails)
                 {
+                    var estudiante = await _estudianteRepository.GetByEmailAsync(email, cancellationToken);
+                    if (estudiante == null)
+                    {
+                        return Result.Failure<Guid>(new Error(
+                            "Workspace.CoautorNoEncontrado", 
+                            $"No se encontró ningún estudiante registrado con el correo: {email}"));
+                    }
+
+                    var coautorId = estudiante.Id;
+
                     // Evitar que el autor principal se agregue como coautor
                     if (coautorId == request.AutorPrincipalId)
                     {

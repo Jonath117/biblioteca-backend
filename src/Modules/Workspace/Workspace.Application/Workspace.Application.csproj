@@ -8,12 +8,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Workspace.Domain\Workspace.Domain.csproj" />
+    <ProjectReference Include="..\..\IAM\IAM.Application\IAM.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="MediatR" Version="14.1.0" />
-    <PackageReference Include="FluentValidation" Version="11.11.0" />
-    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
+    <PackageReference Include="FluentValidation" Version="12.1.1" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,33 @@
+name: Backend CI (.NET Modular Monolith)
+
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+
+# 2. ¿QUÉ TRABAJO VA A REALIZAR?
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout del código
+      uses: actions/checkout@v4
+
+
+    - name: Configurar .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x' 
+
+
+    - name: Restaurar dependencias
+      run: dotnet restore
+
+    - name: Compilar el proyecto (Build)
+      run: dotnet build --no-restore --configuration Release
+
+    - name: Ejecutar pruebas (Test)
+      run: dotnet test --no-build --verbosity normal --configuration Release

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Workspace.Infrastructure.Persistence.Configurations;
@@ -11,9 +12,11 @@ using Workspace.Infrastructure.Persistence.Configurations;
 namespace Workspace.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(WorkspaceDbContext))]
-    partial class WorkspaceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260624021932_ReplicacionEstudiantes")]
+    partial class ReplicacionEstudiantes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

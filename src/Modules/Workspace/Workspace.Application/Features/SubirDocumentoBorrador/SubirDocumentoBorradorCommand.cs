@@ -11,5 +11,5 @@ public record SubirDocumentoBorradorCommand(
     string Resumen,
     Stream ArchivoStream,
     string ArchivoNombre,
-    List<Guid> CoautoresIds
+    List<string> CoautoresEmails
 ) : ICommand<Guid>;

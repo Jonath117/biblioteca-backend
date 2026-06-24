@@ -70,7 +70,7 @@ public class DocumentosController : ControllerBase
             request.Resumen,
             stream,
             request.Archivo.FileName,
-            request.CoautoresIds
+            request.CoautoresEmails
         );
 
         var result = await _sender.Send(command);
@@ -103,6 +103,6 @@ public class SubirDocumentoBorradorRequest
 {
     public string Titulo { get; set; } = string.Empty;
     public string Resumen { get; set; } = string.Empty;
-    public IFormFile Archivo { get; set; } = null!;
-    public List<Guid> CoautoresIds { get; set; } = new();
+    public IFormFile? Archivo { get; set; }
+    public List<string> CoautoresEmails { get; set; } = new();
 }

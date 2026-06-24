@@ -12,11 +12,13 @@ public class AutenticarSsoCommandHandler : IRequestHandler<AutenticarSsoCommand,
     private readonly IUsuarioRepository _usuarioRepository;
     private const int ROL_ESTUDIANTE_ID = 1;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
+    private readonly IPublisher _publisher;
     
-    public AutenticarSsoCommandHandler(IUsuarioRepository usuarioRepository, IJwtTokenGenerator jwtTokenGenerator)
+    public AutenticarSsoCommandHandler(IUsuarioRepository usuarioRepository, IJwtTokenGenerator jwtTokenGenerator, IPublisher publisher)
     {
         _usuarioRepository = usuarioRepository;
         _jwtTokenGenerator = jwtTokenGenerator;
+        _publisher = publisher;
     }
 
     public async Task<string> Handle(AutenticarSsoCommand request, CancellationToken cancellationToken)
@@ -50,6 +52,12 @@ public class AutenticarSsoCommandHandler : IRequestHandler<AutenticarSsoCommand,
             
             await _usuarioRepository.AddAsync(usuario, cancellationToken);
             await _usuarioRepository.SaveAsync(cancellationToken);
+            
+            await _publisher.Publish(new IAM.Application.Events.UsuarioCreadoIntegrationEvent(
+                usuario.Id, 
+                usuario.Email, 
+                usuario.Nombre, 
+                usuario.Apellido), cancellationToken);
         }
 
         if (!usuario.Activo)

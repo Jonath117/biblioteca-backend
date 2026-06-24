@@ -8,12 +8,14 @@ namespace IAM.Application.Features.Usuarios.RegistrarUsuario;
 public class RegistrarUsuarioCommandHandler : IRequestHandler<RegistrarUsuarioCommand, Guid>
 {
     private readonly IUsuarioRepository _repository;
+    private readonly IPublisher _publisher;
 
     private const int ROL_ESTUDIANTE = 1;
     
-    public RegistrarUsuarioCommandHandler(IUsuarioRepository repository)
+    public RegistrarUsuarioCommandHandler(IUsuarioRepository repository, IPublisher publisher)
     {
         _repository = repository;
+        _publisher = publisher;
     }
 
     public async Task<Guid> Handle(RegistrarUsuarioCommand request, CancellationToken cancellationToken)
@@ -32,6 +34,12 @@ public class RegistrarUsuarioCommandHandler : IRequestHandler<RegistrarUsuarioCo
         await _repository.AddAsync(nuevoUsuario, cancellationToken);
         await _repository.SaveAsync(cancellationToken);
         
+        await _publisher.Publish(new IAM.Application.Events.UsuarioCreadoIntegrationEvent(
+            nuevoUsuario.Id, 
+            nuevoUsuario.Email, 
+            nuevoUsuario.Nombre, 
+            nuevoUsuario.Apellido), cancellationToken);
+            
         return nuevoUsuario.Id;
     }
 }

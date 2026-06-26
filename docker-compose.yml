@@ -48,7 +48,7 @@ services:
 
   frontend_web:
     build:
-      context: ../frontend-rep/frontend
+      context: ../biblioteca-frontend
       dockerfile: Dockerfile
       args:
         VITE_API_URL: ${VITE_API_URL}

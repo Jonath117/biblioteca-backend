@@ -15,7 +15,7 @@ using Workspace.Infrastructure;
 using Workspace.Presentation;
 using DotNetEnv;
 
-Env.Load();
+Env.Load("../../../.env");
 
 var builder = WebApplication.CreateBuilder(args);
 
